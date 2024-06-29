@@ -16,16 +16,15 @@ Let's say you're requesting a page that needs to fetch a code chunk from the ser
 
 > Warning: React attempted to reuse markup in a container but the checksum was invalid. This generally means that you are using server rendering and the markup generated on the server was not what the client was expecting. React injected new markup to compensate which works but you have lost many of the benefits of server rendering. Instead, figure out why the markup being generated is different on the client or server:
 
-> (client) <!-- react-empty: 1 -
+> (client) `<!-- react-empty: 1 -`
 
-> (server) <div data-reactroot="
-<!--This comment is here because the comment beginning on line 13 messes up Sublime's markdown parsing-->
+> (server) `<div data-reactroot="`
 
-Different markup is generated on the client than on the server. Why does this happen? When you register a component or Render-Function with `ReactOnRails.register`, react on rails will render the component as soon as the page loads. However, react-router renders a comment while waiting for the code chunk to be fetched from the server. This means that react will tear all of the server rendered code out of the DOM, and then rerender it a moment later once the code chunk arrives from the server, defeating most of the purpose of server rendering.
+Different markup is generated on the client than on the server. Why does this happen? When you register a component or Render-Function with `ReactOnRails.register`, react on rails will render the component as soon as the page loads. However, react-router renders a comment while waiting for the code chunk to be fetched from the server. This means that react will tear all the server rendered code out of the DOM, and then rerender it a moment later once the code chunk arrives from the server, defeating most of the purpose of server rendering.
 
 ### The solution
 
-To prevent this, you have to wait until the code chunk is fetched before doing the initial render on the client side. To accomplish this, react on rails allows you to register a renderer. This works just like registering a Render-Function, except that the function you pass takes three arguments: `renderer(props, railsContext, domNodeId)`, and is responsible for calling `ReactDOM.render` or `ReactDOM.hydrate` to render the component to the DOM. React on rails will automatically detect when a Render-Function takes three arguments, and will **not** call `ReactDOM.render` or `ReactDOM.hydrate`, instead allowing you to control the initial render yourself. Note, you have to be careful to call `ReactDOM.hydrate` rather than `ReactDOM.render` if you are are server rendering.
+To prevent this, you have to wait until the code chunk is fetched before doing the initial render on the client side. To accomplish this, react on rails allows you to register a renderer. This works just like registering a Render-Function, except that the function you pass takes three arguments: `renderer(props, railsContext, domNodeId)`, and is responsible for calling `ReactDOM.render` or `ReactDOM.hydrate` to render the component to the DOM. React on rails will automatically detect when a Render-Function takes three arguments, and will **not** call `ReactDOM.render` or `ReactDOM.hydrate`, instead allowing you to control the initial render yourself. Note, you have to be careful to call `ReactDOM.hydrate` rather than `ReactDOM.render` if you are server rendering.
 
 Here's an example of how you might use this in practice:
 
@@ -107,7 +106,7 @@ export default RouterAppRenderer;
 
 What's going on in this example is that we're putting the rendering code in the callback passed to `match`. The effect is that the client render doesn't happen until the code chunk gets fetched from the server, preventing the client/server checksum mismatch.
 
-The idea is that match from react-router is async; it fetches the component using the getComponent method that you provide with the route definition, and then passes the props to the callback that are needed to do the complete render. Then we do the first render inside of the callback, so that the first render is the same as the server render.
+The idea is that match from react-router is async; it fetches the component using the getComponent method that you provide with the route definition, and then passes the props to the callback that are needed to do the complete render. Then we do the first render inside the callback, so that the first render is the same as the server render.
 
 The server render matches the deferred render because the server bundle is a single file, and so it doesn't need to wait for anything to be fetched.
 
@@ -119,7 +118,7 @@ See:
 
 - [spec/dummy/client/app/startup/client-bundle.js](https://github.com/shakacode/react_on_rails/tree/master/spec/dummy/client/app/startup/client-bundle.js)
 - [spec/dummy/client/app/packs/server-bundle.js](https://github.com/shakacode/react_on_rails/tree/master/spec/dummy/client/app/packs/server-bundle.js)
-- [spec/dummy/client/app/startup/DeferredRenderAppClient](https://github.com/shakacode/react_on_rails/tree/master/spec/dummy/client/app/startup/DeferredRenderAppClient.jsx)<-- Code splitting implemented here
+- [spec/dummy/client/app/startup/DeferredRenderAppClient](https://github.com/shakacode/react_on_rails/tree/master/spec/dummy/client/app/startup/DeferredRenderAppClient.jsx) # Code splitting implemented here
 - [spec/dummy/client/app/startup/DeferredRenderAppServer.jsx](https://github.com/shakacode/react_on_rails/tree/master/spec/dummy/client/app/startup/DeferredRenderAppServer.jsx)
 - [spec/dummy/client/app/components/DeferredRender.jsx](https://github.com/shakacode/react_on_rails/tree/master/spec/dummy/client/app/components/DeferredRender.jsx)
 - [spec/dummy/client/app/components/DeferredRenderAsyncPage.jsx](https://github.com/shakacode/react_on_rails/tree/master/spec/dummy/client/app/components/DeferredRenderAsyncPage.jsx)
@@ -130,9 +129,9 @@ See:
 
 ### Caveats
 
-If you're going to try to do code splitting with server rendered routes, you'll probably need to use seperate route definitions for client and server to prevent code splitting from happening for the server bundle. The server bundle should be one file containing all the JavaScript code. This will require you to have seperate webpack configurations for client and server.
+If you're going to try to do code splitting with server rendered routes, you'll probably need to use separate route definitions for client and server to prevent code splitting from happening for the server bundle. The server bundle should be one file containing all the JavaScript code. This will require you to have separate webpack configurations for client and server.
 
-The reason is we do server rendering with ExecJS, which is not capable of doing anything asynchronous. It would be impossible to asyncronously fetch a code chunk while server rendering. See [this issue](https://github.com/shakacode/react_on_rails/issues/477) for a discussion.
+The reason is we do server rendering with ExecJS, which is not capable of doing anything asynchronous. It would be impossible to asynchronously fetch a code chunk while server rendering. See [this issue](https://github.com/shakacode/react_on_rails/issues/477) for a discussion.
 
 Also, do not attempt to register a renderer function on the server. Instead, register either a Render-Function or a component. If you register a renderer in the server bundle, you'll get an error when react on rails tries to server render the component.
 

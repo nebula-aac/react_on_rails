@@ -1,7 +1,7 @@
 # View and Controller Helpers
 ##  View Helpers API
 
-Once the bundled files have been generated in your `app/assets/webpack` folder and you have registered your components, you will want to render these components on your Rails views using the included helper method, [`react_component`](https://www.shakacode.com/react-on-rails/docs/api/view-helpers-api/#react_component).
+Once the bundled files have been generated in your `app/assets/webpack` folder, and you have registered your components, you will want to render these components on your Rails views using the included helper method, [`react_component`](https://www.shakacode.com/react-on-rails/docs/api/view-helpers-api/#react_component).
 
 ------------
 
@@ -22,7 +22,7 @@ Uncommonly used options:
   id: nil,
 ```
 
-- **component_name:** Can be a React component, created using a React Function Component, an ES6 class or a Render-Function that returns a React component (or, only on the server side, an object with shape { redirectLocation, error, renderedHtml }), or a "renderer function" that manually renders a React component to the dom (client side only). Note, a "renderer function" is a special type of "Render-Function." A "renderer function" takes a 3rd param of a DOM ID.
+- **component_name:** Can be a React component, created using a React Function Component, an ES6 class or a Render-Function that returns a React component (or, only on the server side, an object with shape `{ redirectLocation, error, renderedHtml }`), or a "renderer function" that manually renders a React component to the dom (client side only). Note, a "renderer function" is a special type of "Render-Function." A "renderer function" takes a 3rd param of a DOM ID.
   All options except `props, id, html_options` will inherit from your `react_on_rails.rb` initializer, as described [here](https://www.shakacode.com/react-on-rails/docs/guides/configuration/).
 - **general options:**
   - **props:** Ruby Hash which contains the properties to pass to the react object, or a JSON string. If you pass a string, we'll escape it for you.
@@ -93,13 +93,13 @@ end %>
 
 ### rails_context
 
-You can call `rails_context` or `rails_context(server_side: true|false)` from your controller or view to see what values are are in the Rails Context. Pass true or false depending on whether you want to see the server side or the client side rails_context. Typically, for computing cache keys, you should leave server_side as the default true. When calling this from a controller method, use `helpers.rails_context`.
+You can call `rails_context` or `rails_context(server_side: true|false)` from your controller or view to see what values are in the Rails Context. Pass true or false depending on whether you want to see the server side or the client side rails_context. Typically, for computing cache keys, you should leave server_side as the default true. When calling this from a controller method, use `helpers.rails_context`.
 
 ------------
 
 ### Renderer Functions (function that will call ReactDOM.render or ReactDOM.hydrate)
 
-A "renderer function" is a Render-Function that accepts three arguments (rather than 2): `(props, railsContext, domNodeId) => { ... }`. Instead of returning a React component, a renderer is responsible for installing a callback that will call `ReactDOM.render` (in React 16+, `ReactDOM.hydrate`) to render a React component into the DOM. The "renderer function" is called at the same time the document ready event would instantate the React components into the DOM.
+A "renderer function" is a Render-Function that accepts three arguments (rather than 2): `(props, railsContext, domNodeId) => { ... }`. Instead of returning a React component, a renderer is responsible for installing a callback that will call `ReactDOM.render` (in React 16+, `ReactDOM.hydrate`) to render a React component into the DOM. The "renderer function" is called at the same time the document ready event would instantiate the React components into the DOM.
 
 Why would you want to call `ReactDOM.hydrate` yourself? One possible use case is [code splitting](https://www.shakacode.com/react-on-rails/docs/javascript/code-splitting/). In a nutshell, you don't want to load the React component on the DOM node yet. So you want to install some handler that will call `ReactDOM.hydrate` at a later time. In the case of code splitting with server rendering, the server rendered code has any async code loaded and used to server render. Thus, the client code must also fully load any asynch code before server rendering. Otherwise, the client code would first render partially, not matching the server rendering, and then a second later, the full code would render, resulting in an unpleasant flashing on the screen.
 

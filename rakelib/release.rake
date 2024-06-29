@@ -34,7 +34,7 @@ Example: `rake release[2.1.0,false]`")
 task :release, %i[gem_version dry_run tools_install] do |_t, args|
   include ReactOnRails::TaskHelpers
 
-  # Check if there are uncommited changes
+  # Check if there are uncommitted changes
   ReactOnRails::GitUtils.uncommitted_changes?(RaisingMessageHandler.new)
   args_hash = args.to_hash
 
@@ -49,7 +49,8 @@ task :release, %i[gem_version dry_run tools_install] do |_t, args|
                 end
 
   # Having the examples prevents publishing
-  Rake::Task["examples:clobber"].invoke
+  Rake::Task["shakapacker_examples:clobber"].invoke
+  Rake::Task["webpacker_examples:clobber"].invoke
   # Delete any react_on_rails.gemspec except the root one
   sh_in_dir(gem_root, "find . -mindepth 2 -name 'react_on_rails.gemspec' -delete")
 

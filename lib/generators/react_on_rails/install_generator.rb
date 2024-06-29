@@ -54,7 +54,7 @@ module ReactOnRails
           invoke "react_on_rails:react_no_redux"
         end
 
-        invoke "react_on_rails:adapt_for_older_shakapacker" unless using_shakapacker_7?
+        invoke "react_on_rails:adapt_for_older_shakapacker" unless using_shakapacker_7_or_above?
       end
 
       # NOTE: other requirements for existing files such as .gitignore or application.
@@ -88,24 +88,18 @@ module ReactOnRails
         Dir.chdir("#{__dir__}/bin") do
           files_to_copy.concat(Dir.glob("*"))
         end
-        files_to_become_excutable = files_to_copy.map { |filename| "bin/#{filename}" }
+        files_to_become_executable = files_to_copy.map { |filename| "bin/#{filename}" }
 
-        File.chmod(0o755, *files_to_become_excutable)
+        File.chmod(0o755, *files_to_become_executable)
       end
 
       def add_post_install_message
-        message = GeneratorMessages.helpful_message_after_installation
-        unless using_shakapacker_7?
-          message = message.gsub("config/shakapacker", "config/webpacker")
-          message = message.gsub("bin/shakapacker", "bin/webpacker")
-        end
-
-        GeneratorMessages.add_info(message)
+        GeneratorMessages.add_info(GeneratorMessages.helpful_message_after_installation)
       end
 
-      def using_shakapacker_7?
+      def using_shakapacker_7_or_above?
         shakapacker_gem = Gem::Specification.find_by_name("shakapacker")
-        shakapacker_gem.version.segments.first == 7
+        shakapacker_gem.version.segments.first >= 7
       rescue Gem::MissingSpecError
         # In case using Webpacker
         false

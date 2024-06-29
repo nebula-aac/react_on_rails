@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
-gem "shakapacker", "7.2.1"
+gem "shakapacker", "8.0.0"
 gem "bootsnap", require: false
 gem "rails", "~> 7.1"
 
-gem "sqlite3"
+gem "sqlite3", "~> 1.6"
 gem "sass-rails", "~> 6.0"
 gem "uglifier"
 gem "jquery-rails"
 gem "puma", "~> 6.0"
-gem "bundler", "2.5.3"
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem "turbolinks" if ENV["DISABLE_TURBOLINKS"].nil? || ENV["DISABLE_TURBOLINKS"].strip.empty?
@@ -25,6 +24,7 @@ gem "amazing_print"
 
 group :development, :test do
   gem "listen"
+  gem "debug"
   gem "pry"
   gem "pry-byebug"
   gem "pry-doc"

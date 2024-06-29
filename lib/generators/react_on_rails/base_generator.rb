@@ -3,7 +3,6 @@
 require "rails/generators"
 require_relative "generator_messages"
 require_relative "generator_helper"
-
 module ReactOnRails
   module Generators
     class BaseGenerator < Rails::Generators::Base
@@ -30,11 +29,14 @@ module ReactOnRails
       def copy_base_files
         base_path = "base/base/"
         base_files = %w[app/controllers/hello_world_controller.rb
-                        app/views/layouts/hello_world.html.erb
-                        config/initializers/react_on_rails.rb
-                        Procfile.dev
-                        Procfile.dev-static]
+                        app/views/layouts/hello_world.html.erb]
+        base_templates = %w[config/initializers/react_on_rails.rb
+                            Procfile.dev
+                            Procfile.dev-static]
         base_files.each { |file| copy_file("#{base_path}#{file}", file) }
+        base_templates.each do |file|
+          template("#{base_path}/#{file}.tt", file, { packer_type: ReactOnRails::PackerUtils.packer_type })
+        end
       end
 
       def copy_js_bundle_files
@@ -60,16 +62,14 @@ module ReactOnRails
         config = {
           message: "// The source code including full typescript support is available at:"
         }
-        base_files.each do |file|
-          template("#{base_path}/#{file}.tt", file, config)
-        end
+        base_files.each { |file| template("#{base_path}/#{file}.tt", file, config) }
       end
 
-      def copy_shakapacker_config
-        puts "Adding Shakapacker v7 config file"
+      def copy_packer_config
+        puts "Adding Shakapacker #{ReactOnRails::PackerUtils.shakapacker_version} config"
         base_path = "base/base/"
-        base_files = %w[config/shakapacker.yml]
-        base_files.each { |file| copy_file("#{base_path}#{file}", file) }
+        config = "config/shakapacker.yml"
+        copy_file("#{base_path}#{config}", config)
       end
 
       def add_base_gems_to_gemfile
@@ -82,7 +82,7 @@ module ReactOnRails
           run "yarn add react-on-rails@#{ReactOnRails::VERSION} --exact"
         else
           # otherwise add latest
-          puts "Adding the lastest react-on-rails NPM module. Double check this is correct in package.json"
+          puts "Adding the latest react-on-rails NPM module. Double check this is correct in package.json"
           run "yarn add react-on-rails --exact"
         end
 
@@ -92,7 +92,7 @@ module ReactOnRails
 
         puts "Adding CSS handlers"
 
-        run "yarn add css-loader css-minimizer-webpack-plugin mini-css-extract-plugin style-loader@"
+        run "yarn add -D css-loader css-minimizer-webpack-plugin mini-css-extract-plugin style-loader"
 
         puts "Adding dev dependencies"
         run "yarn add -D @pmmmwh/react-refresh-webpack-plugin react-refresh"
