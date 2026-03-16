@@ -1,4 +1,7 @@
-# Heroku Deployment
+# Node Renderer: Heroku Deployment
+
+> **Pro Feature** — Available with [React on Rails Pro](https://pro.reactrails.com).
+> Free for evaluation and startups. [Get a license →](mailto:justin@shakacode.com)
 
 Most React on Rails Pro installations of the Node SSR Renderer will deploy the Rails and Renderer
 instances on the same server. This technique results in better performance since it avoids network

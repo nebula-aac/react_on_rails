@@ -1,5 +1,10 @@
 # Bundle Caching
 
+> **Pro Feature** — Available with [React on Rails Pro](https://pro.reactrails.com).
+> Free for evaluation and startups. [Get a license →](mailto:justin@shakacode.com)
+
+Bundle caching avoids redundant webpack builds by caching bundles based on a digest of source files.
+
 ## Why?
 
 Building webpack bundles is often time-consuming, and the same bundles are built many times.
@@ -28,7 +33,7 @@ The bundles are cached in `Rails.root.join('tmp', 'bundle_cache')`
 
 So, if you have sibling directories for the same project, you can make a sym link so both directories use the same bundle cache directory.
 
-```
+```bash
 cd my_project2/tmp
 ln -s ../../my_project/tmp/bundle_cache
 ```
@@ -70,7 +75,7 @@ end
 Next, we need to configure the `config/initializers/react_on_rails_pro.rb` with some module,
 say called S3BundleCacheAdapter.
 
-```
+```ruby
 config.remote_bundle_cache_adapter = S3BundleCacheAdapter
 ```
 
@@ -115,7 +120,7 @@ A much better approach than accessing `process.env` is to use the
 `config/initializers/react_on_rails.rb` setting for the`config.rendering_extension` to always
 pass some values into the rendering props.
 
-See [our railsContext docs](https://reactonrails.com/docs/core-concepts/render-functions-and-railscontext/#customization-of-the-railscontext) for more details.
+See [our railsContext docs](../core-concepts/render-functions-and-railscontext.md) for more details.
 
 Also, if your webpack build process depends on any ENV values, then you will also need to add those
 to return value of the `cache_keys` method.
@@ -130,9 +135,9 @@ would force a new cache value.
 Once configured for bundle caching, ReactOnRailsPro::AssetsPrecompile's caching functionality
 can be disabled by setting ENV["DISABLE_PRECOMPILE_CACHE"] equal to "true"
 
-### Examples of `remote_bundle_cache_adapter`:
+## Examples of `remote_bundle_cache_adapter`:
 
-#### S3BundleCacheAdapter
+### S3BundleCacheAdapter
 
 Example of a module for custom methods for the `remote_bundle_cache_adapter`.
 
@@ -192,7 +197,7 @@ class S3BundleCacheAdapter
 end
 ```
 
-#### LocalBundleCacheAdapter
+### LocalBundleCacheAdapter
 
 Example of a module for custom methods for the `remote_bundle_cache_adapter` that does not save files
 remotely. Only local files are used.

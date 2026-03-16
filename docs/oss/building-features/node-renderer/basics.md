@@ -1,12 +1,17 @@
-# Requirements
+# Node Renderer Basics
+
+> **Pro Feature** — Available with [React on Rails Pro](https://pro.reactrails.com).
+> Free for evaluation and startups. [Get a license →](mailto:justin@shakacode.com)
+
+## Requirements
 
 - You must use React on Rails v11.0.7 or higher.
 
-# Install the Gem and the Node Module
+## Install the Gem and the Node Module
 
-See [Installation](../installation.md).
+See [Installation](../../../pro/installation.md).
 
-# Setup Node Renderer Server
+## Setup Node Renderer Server
 
 **node-renderer** is a standalone Node application to serve React SSR requests from a **Rails** client. You don't need any **Ruby** code to setup and launch it. You can configure with the command line or with a launch file.
 
@@ -60,9 +65,9 @@ For the most control over the setup, create a JavaScript file to start the NodeR
 5. Now you can launch your renderer server with `node node-renderer.js`. You will probably add a script to your `package.json`.
 6. You can use a command line argument of `-p SOME_PORT` to override any configured or ENV value for the port.
 
-# Setup Rails Application
+## Setup Rails Application
 
-Create `config/initializers/react_on_rails_pro.rb` and configure the **renderer server**. See configuration values in [Configuration](../configuration.md). Pay attention to:
+Create `config/initializers/react_on_rails_pro.rb` and configure the **renderer server**. See configuration values in [Configuration](../../configuration/configuration-pro.md). Pay attention to:
 
 1. Set `config.server_renderer = "NodeRenderer"`
 2. Leave the default of `config.prerender_caching = true` and ensure your Rails cache is properly configured to handle the additional cache load.
@@ -79,9 +84,9 @@ ReactOnRailsPro.configure do |config|
 end
 ```
 
-## Troublshooting
+## Troubleshooting
 
-- See [JS Memory Leaks](../js-memory-leaks.md).
+- See [JS Memory Leaks](../../../pro/js-memory-leaks.md).
 
 ## Upgrading
 
@@ -89,6 +94,6 @@ The NodeRenderer has a protocol version on both the Rails and Node sides. If the
 
 ## References
 
-- [Installation](../installation.md).
-- [Rails Options for node-renderer](../configuration.md)
+- [Installation](../../../pro/installation.md)
+- [Rails Options for node-renderer](../../configuration/configuration-pro.md)
 - [JS Options for node-renderer](./js-configuration.md)
